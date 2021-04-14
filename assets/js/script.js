@@ -17,6 +17,41 @@ var currentDate = m.format('D');
 
 var monthsArray = moment.months();
 var daysArray = [];
+
+saveAppointmentDetails('Susanne', '20210428', '08:00', 'self', 'Doctor', '12 Smith Street, Perth, WA');
+
+function saveAppointmentDetails(userName, appointmentDate, appointmentStartTime, appointmentWhom, appointmentWith, appointmentAddress){
+
+  appointmentDetails = [];
+  
+  var newAppointmentDetails = {
+      name: '',
+      appointmentDate: '',
+      appointmentStartTime: '',
+      appointmentWhom:'',
+      appointmentWith:'',
+      appointmentAddress:''
+  }
+
+  newAppointmentDetails.name = userName;
+  newAppointmentDetails.appointmentDate = appointmentDate;
+  newAppointmentDetails.appointmentStartTime = appointmentStartTime;
+  newAppointmentDetails.appointmentWhom = appointmentWhom;
+  newAppointmentDetails.appointmentWith = appointmentWith;
+  newAppointmentDetails.appointmentAddress = appointmentAddress;
+
+  var oldAppoinmentDetails = JSON.parse(localStorage.getItem("myAppointmentDetails"));
+  if (oldAppoinmentDetails !== null) {
+    appointmentDetails = Object.values(oldAppoinmentDetails);
+    appointmentDetails.push(newAppointmentDetails);
+    localStorage.setItem("myAppointmentDetails", JSON.stringify(appointmentDetails));
+   }else {
+    appointmentDetails.unshift(newAppointmentDetails);
+    localStorage.setItem("myAppointmentDetails", JSON.stringify(appointmentDetails))
+   }
+}
+
+
 function getDaysArrayByMonth(year, month) {
     var daysInMonth = moment(year + "-" + month).daysInMonth();
     while(daysInMonth) {
