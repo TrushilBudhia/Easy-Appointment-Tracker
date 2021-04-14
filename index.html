@@ -4,31 +4,70 @@
         <!-- ... -->
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC856BBT5rwwkraEtK2Ki5obfAUgw1M2KQ&libraries=places"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
         <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
         <link href="./assets/css/style.css" rel="stylesheet">
     </head>
     <body class="has-background-info-light">
-        <header class="has-background-white is-link is-size-2 mb-5 px-4 py-1">
-            <h1>Easy Appointment Tracker</h1>
+        <header class="has-background-white is-size-2 mb-5 px-4 py-1">
+            <h1 class="has-text-grey-dark has-text-weight-semibold">Easy Appointment Tracker</h1>
         </header>
         <main class="container">
             <section class="create-appointment-entry is-flex is-justify-content-center mb-5">
-                <button class="create-appointment-entry-button button is-link is-size-4 p-5">Create Appointment Entry</button>
+                <button class="create-appointment-entry-button">Create Appointment Entry</button>
             </section>
             <section class="appointment-date box">
                 <progress class="progress is-info" value="0" max="100">0%</progress>
-                <article class="date-description"></article>
+                <article class="months is-flex is-flex-wrap-wrap is-justify-content-center">
+                    <!-- The month buttons will be added here from JavaScript -->
+                </article>
+                <article class="days is-flex is-flex-wrap-wrap is-justify-content-center column is-10 is-offset-1">
+                    <!-- The day buttons will be added here from JavaScript -->
+                </article>
+                <article class="appointment-time is-flex is-justify-content-center mt-4">
+                    <!-- The time input field will be added here from JavaScript -->
+                </article>
+                <article class="date-description mt-4">
+                    <!-- Date the user has chosen for the appointment will be displayed in this article -->
+                </article>
             </section>
+            <!-- This section below deals with user inputting the details of the appointments beyond date -->
             <section class="appointment-details box">
                 <progress class="progress is-info" value="50" max="100">50%</progress>
+                <h3 class="has-text-grey-dark is-size-3">Appointment Information:</h3>
+                <form>
+                    <div class="is-size-5 my-4">
+                        <label class="has-text-weight-semibold" for="username-input">Enter Your Name:</label><br>
+                        <input type="text" id="username-input" name="username-input" placeholder="Enter Name" size="50">
+                    </div>
+                    <div class="is-size-5 my-4">
+                        <label class="has-text-weight-semibold" for="appointment-name-input">Appointment For Whom:</label><br>
+                        <input type="text" id="appointment-name-input" name="appointment-name-input" placeholder="Enter Name" size="50">
+                    </div>
+                    <div class="is-size-5 my-4">
+                        <label class="has-text-weight-semibold" for="person-appointment-with">Appointment With:</label><br>
+                        <input type="text" id="person-appointment-with" name="person-appointment-with" placeholder="Enter Name" size="50">
+                    </div>
+                    <div class="is-size-5 my-4">
+                        <label class="has-text-weight-semibold" for="appointment-location">Appointment Location:</label><br>
+                        <input type="text" id="appointment-location" name="appointment-location" placeholder="Enter Address" size="50">
+                    </div>
+                    <input class="submit-appointment button is-success is-right mt-3 px-5" type="submit" value="Submit">
+                </form> 
             </section>
             <section class="appointment-confirmation">
-                
+                <!-- Add confirmation message ("Your appointment entry has been added") here when the user clicks the submit button to add the appointment -->
+            </section>
+
+            <!-- This section below will contain the appointments cars the user inputs and submits -->
+            <section class="appointment-cards">
+                <h3 class="has-text-grey-dark is-size-3 my-5">Appointments:</h3>
             </section>
         </main>
     <!-- ... -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="assets/js/autoComplete.js"></script>
     <script src="assets/js/script.js"></script>
     </body>
 </html>
