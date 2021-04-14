@@ -1,0 +1,18 @@
+/* Google Maps Autocomplete search styling */
+.pac-icon {
+    display: none;
+}
+
+.pac-item {
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.pac-item:hover {
+    background-color: #ececec;
+}
+
+.pac-item-query {
+    font-size: 16px;
+}

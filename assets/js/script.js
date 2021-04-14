@@ -2,21 +2,27 @@
 var body = document.querySelector('body');
 var headerSection = document.querySelector('header');
 var mainSection = document.querySelector('main');
-var AppointmentEntry = document.querySelector('.create-appointment-entry');
-var AppointmentEntryButton = document.querySelector('.create-appointment-entry-button');
-var AppointmentDate = document.querySelector('.appointment-date');
-var AppointmentDetails = document.querySelector('.appointment-details');
+var appointmentEntrySection = document.querySelector('.create-appointment-entry');
+var appointmentEntryButton = document.querySelector('.create-appointment-entry-button');
+var appointmentDateSection = document.querySelector('.appointment-date');
+var monthArticle = document.querySelector('.months');
+var dayArticle = document.querySelector('.days');
+var timeArticle = document.querySelector('.appointment-time');
+var appointmentDetailsSection = document.querySelector('.appointment-details');
 var dateParagraphContainer = document.querySelector('.date-description');
-
-// Using moment.js for the dates - year, month and day
+var appointmentCardSection = document.querySelector('.appointment-cards');
+// Using moment.js for the dates - year, month and day  
 var m = moment();
 var currentYear = m.format('YYYY');
 var currentMonth = m.format('MMMM');
 var currentMonthNumber = m.format('MM');
 var currentDate = m.format('D');
-
 var monthsArray = moment.months();
 var daysArray = [];
+var dayOfWeek, dateChosen, monthChosen, userName, appointmentDate, appointmentStartTime, appointmentWith, appointmentWhom, appointmentAddress, formattedDate, formattedMonth;
+var currentMonthIndex = monthsArray.indexOf(currentMonth);
+
+console.log(currentDate, currentMonth, currentYear);
 
 saveAppointmentDetails('Susanne', '20210428', '08:00', 'self', 'Doctor', '12 Smith Street, Perth, WA');
 
@@ -52,34 +58,16 @@ function saveAppointmentDetails(userName, appointmentDate, appointmentStartTime,
 }
 
 
-function getDaysArrayByMonth(year, month) {
-    var daysInMonth = moment(year + "-" + month).daysInMonth();
-    while(daysInMonth) {
-        var current = moment(year + "-" + month).date(daysInMonth);
-        var dayNumber = current.format('D');
-        daysArray.push(dayNumber);
-        daysInMonth--;
-    }
-    daysArray.sort(function(a, b){return a-b});
-}
-
-console.log(monthsArray);
-console.log(daysArray);
-console.log(currentDate, currentMonth, currentYear);
-var currentMonthIndex = monthsArray.indexOf(currentMonth);
-
+/* FUNCTION FOR THE FIRST STEP IN THE CREATE APPOINTMENT PROCESS */
 // When the Create Appointment Entry Button is clicked, a list of months will be displayed
 function startEntry() {
-    AppointmentEntryButton.setAttribute('class', 'is-hidden');
-    AppointmentDate.setAttribute('class', 'is-block box');
-    AppointmentDate.setAttribute('style', 'height: ;');
-    // Creating the month article and month buttons and appending it all to the month article
-    var monthArticle = document.createElement('article');
-    monthArticle.setAttribute('class', 'months is-flex is-flex-wrap-wrap is-justify-content-center');
+    appointmentEntryButton.setAttribute('class', 'is-hidden');
+    appointmentDateSection.setAttribute('class', 'is-block box');
+
+    // Creating the month buttons and appending it all to the month article
     for(i = 0; i < monthsArray.length; i++) {
         var monthValue = monthsArray[i];
-        console.log(monthValue);
-        
+      
         var monthButton = document.createElement('button');
         monthButton.setAttribute('class', 'month button is-link mx-1 mt-3');
         monthButton.setAttribute('data-month', monthValue);
@@ -87,8 +75,8 @@ function startEntry() {
         monthButton.textContent = monthValue;
         monthArticle.append(monthButton);
     }
-    AppointmentDate.insertBefore(monthArticle, dateParagraphContainer);
-
+    var numberOfMonthButtons = appointmentDateSection.querySelectorAll('.month');
+    numberOfElementsShown(numberOfMonthButtons, 12);
     // Attaching click event to current and future months in the year. The past month buttons are disabled
     var monthButtonSelect = monthArticle.querySelectorAll('button');
     for(i = currentMonthIndex; i < monthButtonSelect.length; i++) {
@@ -102,14 +90,12 @@ function startEntry() {
 }
 
 // Once the month is selected by the user, a list of days for that month will be displayed
-var monthChosen;
 function monthSelected() {
     monthChosen = this.getAttribute('data-month'); 
     console.log("Month chosen is " + monthChosen);
     daysArray = [];
     // Changing the selected month button colour when clicked
     var monthChosenIndex = monthsArray.indexOf(monthChosen);
-    console.log(monthChosenIndex);
     var monthArticle = document.querySelector('.months');
     var monthButtonSelect = monthArticle.querySelectorAll('button');
     for(i = 0; i < monthsArray.length; i++) {
@@ -119,11 +105,8 @@ function monthSelected() {
     }
     monthChosenNumber = monthChosenIndex + 1;
     getDaysArrayByMonth(currentYear, monthChosenNumber);
-    console.log(daysArray);
 
-    // Creating the day article and day buttons and appending it all to the day article 
-    var dayArticle = document.createElement('article');
-    dayArticle.setAttribute('class', 'days is-flex is-flex-wrap-wrap is-justify-content-center column is-10 is-offset-1');
+    // Creating the day buttons and appending it all to the day article 
     for(i = 0; i < daysArray.length; i++) {
         var dayValue = daysArray[i];
         var dayButton = document.createElement('button');
@@ -131,55 +114,154 @@ function monthSelected() {
         dayButton.setAttribute('data-day', dayValue);
         dayButton.textContent = dayValue;
         dayArticle.append(dayButton);
-    }
-    AppointmentDate.insertBefore(dayArticle, dateParagraphContainer);
-    
-    // If the user changes their mind and selects a different month, the previous list of days article will be removed and only the new month days will be displayed
-    var numberOfDayArticles = AppointmentDate.querySelectorAll('.days');
-    if(numberOfDayArticles.length > 1) {
-        numberOfDayArticles[0].remove();
-    }
+    }   
+    // When the user selects a month, only the dates for that month will be shown - the dates for the previous month selected will be removed i.e. the number of buttons will equal the number of days in the month selected
+    var dayButtonsSelect = appointmentDateSection.querySelectorAll('.day');
+    formattedMonth = ("0" + monthChosenNumber).slice(-2);
+    var numberOfDaysInMonthChosen = moment(currentYear + '-' + formattedMonth).daysInMonth();
+    console.log("Number of days in month chosen is " + numberOfDaysInMonthChosen);
+    numberOfElementsShown(dayButtonsSelect, numberOfDaysInMonthChosen);
 
     // Click event added to the days buttons
     var dayButtonSelect = dayArticle.querySelectorAll('button');
     for(i = 0; i < dayButtonSelect.length; i++) {
-        dayButtonSelect[i].addEventListener('click', daySelected);
+        dayButtonSelect[i].addEventListener('click', dateSelected);
     }
 }
 
 // Once the day is selected, an option to add the time will be displayed
-function daySelected() {
-    dayChosen = this.getAttribute('data-day');
-    console.log("date chosen is " + dayChosen);
+function dateSelected() {
+    dateChosen = this.getAttribute('data-day');
+    console.log("date chosen is " + dateChosen);
+    // Creating the time container with the input field and adding it to the time article HTML
+    var timeContainer = `
+        <div class='time-container'>
+            <label class='mr-2'>Enter time: </label>
+            <input class='time-input' placeholder='Enter Appointment Time'>
+        </div>
+    `;
+    timeArticle.innerHTML = timeContainer;
 
-    var dateParagraph = document.createElement('paragraph');
+    // When the user selects a date, only the latest time article will be shown - the previous one will be removed
+    var appointmentTimeContainerSelect = document.querySelectorAll('.time-container');
+    numberOfElementsShown(appointmentTimeContainerSelect, 1);
+
+    var dateParagraph = document.createElement('p');
     dateParagraph.setAttribute('class', 'chosen-appointment-date');
+    // When the user selects a date, only the latest date paragraph will be shown - the previous one will be removed
+    var dateParagraphClassSelect = document.querySelectorAll('.chosen-appointment-date');
+    numberOfElementsShown(dateParagraphClassSelect, 0);
 
-    var dateParagraphSelect = document.querySelectorAll('.chosen-appointment-date');
-    if(dateParagraphSelect.length > 0) {
-        dateParagraphSelect[0].remove();
-    }
-    dayOfWeek = moment().format('dddd');
-    dateParagraph.textContent = "Appointment Date: " + dayOfWeek + ", " + dayChosen + " " + monthChosen + " " + currentYear;
-
+    var monthChosenIndex = monthsArray.indexOf(monthChosen);
+    monthChosenNumber = monthChosenIndex + 1;
+    formattedDate = currentYear + formattedMonth + dateChosen; 
+    dayOfWeek = moment(currentYear + '-' + monthChosenNumber + '-' + dateChosen, 'YYYY-MM-DD').format('dddd');
+    dateParagraph.textContent = 'Appointment Date: ' + dayOfWeek + ', ' + dateChosen + ' ' + monthChosen + ' ' + currentYear;
     dateParagraphContainer.append(dateParagraph);
+    appointmentDate = dateChosen + ' ' + monthChosen + ' ' + currentYear;
+
+    nextButtonCreate();
+    console.log('Next button displayed');
+    var nextButtonSelect = document.querySelector('.next');
+    nextButtonSelect.addEventListener('click', secondStepAppointmentDetails);
+}
+
+// The next button will appear when the user has selected a date for their appointment entry
+function nextButtonCreate() {
+    var nextButton = document.createElement('button');
+    nextButton.setAttribute('class', 'next button is-success is-right mt-3 px-5');
+    nextButton.setAttribute('style', 'margin-left: 75%; width: 25%;');
+    nextButton.textContent = "Next";
+    appointmentDateSection.append(nextButton);
+
+    var nextButtonSelect = document.querySelectorAll('.next');
+    numberOfElementsShown(nextButtonSelect, 1); 
+}
+
+/* FUNCTION FOR THE SECOND STEP IN THE CREATE APPOINTMENT PROCESS */
+function secondStepAppointmentDetails() {
+    var timeInputSelect = document.querySelector('.time-input');
+    appointmentStartTime = timeInputSelect.value;
+    if(timeInputSelect && timeInputSelect.value) {
+        appointmentDateSection.setAttribute('class', 'is-hidden');
+        appointmentDetailsSection.setAttribute('class', 'is-block box');
+
+        var submitAppointmentEntryButton = document.querySelector('.submit-appointment');
+        submitAppointmentEntryButton.addEventListener('click', createAppointmentEntry);
+    }
+}
+
+function createAppointmentEntry(event) {
+    event.preventDefault()
+    userNameInput = document.getElementById('username-input');
+    appointmentForInput = document.getElementById('appointment-name-input');
+    appointmentWithInput = document.getElementById('person-appointment-with');
+    addressInput = document.getElementById('appointment-location');
+
+    userName = userNameInput.value;
+    appointmentWhom = appointmentForInput.value;
+    appointmentWith = appointmentWithInput.value;
+    appointmentAddress = addressInput.value;
+
+    if(appointmentForInput && appointmentForInput.value && appointmentWithInput && appointmentWithInput.value && addressInput && addressInput.value) {
+        onLoad();
+        renderAppointments();
+    }
+}
+
+function renderAppointments() {
+    appointmentCardSection.setAttribute('class', 'appointment-cards is-block');
+    var appointmentCardArticle = document.createElement('article');
+    appointmentCardArticle.setAttribute('class', 'box');
+    var appointmentCardContent = `<h4>Appointment entries will be displayed in this section (Can change this line of text to a heading or delete it)</h4>
+    <p class='my-3'><span class='has-text-weight-semibold'>Username:</span> ${userName}</p>
+    <p class='my-3'><span class='has-text-weight-semibold'>Appointment Date:</span> ${appointmentDate}</p>
+    <p class='my-3'><span class='has-text-weight-semibold'>Appointment Time:</span> ${appointmentStartTime}</p>
+    <p class='my-3'><span class='has-text-weight-semibold'>For Whom:</span> ${appointmentWhom}</p>
+    <p class='my-3'><span class='has-text-weight-semibold'>Appointment With:</span> ${appointmentWith}</p>
+    <p class='my-3'><span class='has-text-weight-semibold'>Address:</span> ${appointmentAddress}</p>
+    <p>***********The map of the location (API) will go hear***********</p>
+    `;
+    appointmentCardArticle.innerHTML = appointmentCardContent;
+    appointmentCardSection.append(appointmentCardArticle);
+}
+
+function getDaysArrayByMonth(year, month) {
+    formattedMonth = ('0' + month).slice(-2);
+    var daysInMonth = moment(year + '-' + formattedMonth).daysInMonth();
+    while(daysInMonth) {
+        var monthUsed = moment(year + '-' + formattedMonth).date(daysInMonth);
+        var dayNumber = monthUsed.format('D');
+        daysArray.push(dayNumber);
+        daysInMonth--;
+    }
+    daysArray.sort(function(a, b){return a-b});
+}
+
+// When the user selects a month/date, only the latest article will be shown - the previous one will be removed
+function numberOfElementsShown(elementSelect, numberOfElements) {
+    if(elementSelect.length > numberOfElements) {
+        for(i = 0; i < (elementSelect.length - numberOfElements); i++) {
+            elementSelect[i].remove();
+        }
+    }
 }
 
 // Function to highlight the button of the current month
 function currentMonthHighlight(monthButtonSelect, monthIndex) {
-    monthButtonSelect[monthIndex].setAttribute('class', 'month button is-warning mx-1 mt-3'); 
+    monthButtonSelect[monthIndex].setAttribute('class', 'month is-8 button is-warning mx-1 mt-3'); 
 }
 
 // Click event attached to the Create Appointment Entry button
-AppointmentEntryButton.addEventListener('click', startEntry);
+appointmentEntryButton.addEventListener('click', startEntry);
 
 // Function to run when the webpage loads - user will see the Create Appointment Entry button on the top of the page below the header
 function onLoad() {
     body.setAttribute('style', 'height: 100vh;');
-    AppointmentEntry.setAttribute('class', 'is-flex is-justify-content-center mb-5');
-    //AppointmentDate.setAttribute('style', 'display: none;');
-    AppointmentDate.setAttribute('class', 'is-hidden');
-    //AppointmentDetails.setAttribute('style', 'display: none;');
-    AppointmentDetails.setAttribute('class', 'is-hidden');
+    appointmentEntrySection.setAttribute('class', 'is-flex is-justify-content-center mb-5');
+    appointmentEntryButton.setAttribute('class', 'create-appointment-entry-button button is-link is-size-4 p-5');
+    appointmentDateSection.setAttribute('class', 'is-hidden');
+    appointmentDetailsSection.setAttribute('class', 'is-hidden');
+    appointmentCardSection.setAttribute('class', 'is-hidden');
 }
 onLoad();
