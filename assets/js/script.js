@@ -293,8 +293,8 @@ function addNewAppointment() {
 
   var appointmentCardData = `
   <p class="my-3"><span class="has-text-weight-semibold">Username:</span> ${userName}</p>
-  <p class="my-3"><span class="has-text-weight-semibold">${appointmentDate}</span></p>
-  <p class="my-3"><span class="has-text-weight-semibold">${appointmentStartTime}</span></p>
+  <p class="my-3"><span class="has-text-weight-semibold">Appointment Date:</span> ${appointmentDate}</p>
+  <p class="my-3"><span class="has-text-weight-semibold">Appointment Time:</span> ${appointmentStartTime}</p>
   <p class="my-3"><span class="has-text-weight-semibold">For Whom:</span> ${appointmentWhom}</p>
   <p class="my-3"><span class="has-text-weight-semibold">Appointment With:</span> ${appointmentWith}</p>
   <p class="my-3"><span class="has-text-weight-semibold">Address:</span> ${appointmentAddress}</p>
@@ -319,8 +319,8 @@ function renderAppointments() {
 
     var appointmentCardData = `
     <p class="my-3"><span class="has-text-weight-semibold">Username:</span> ${appointmentDetails.name}</p>
-    <p class="my-3"><span class="has-text-weight-semibold">${appointmentDetails.appointmentDate}</span></p>
-    <p class="my-3"><span class="has-text-weight-semibold">${appointmentDetails.appointmentStartTime}</span></p>
+    <p class="my-3"><span class="has-text-weight-semibold">Appointment Date:</span> ${appointmentDetails.appointmentDate}</p>
+    <p class="my-3"><span class="has-text-weight-semibold">Appointment Time:</span> ${appointmentDetails.appointmentStartTime}</p>
     <p class="my-3"><span class="has-text-weight-semibold">For Whom:</span> ${appointmentDetails.appointmentWhom}</p>
     <p class="my-3"><span class="has-text-weight-semibold">Appointment With:</span> ${appointmentDetails.appointmentWith}</p>
     <p class="my-3"><span class="has-text-weight-semibold">Address:</span> ${appointmentDetails.appointmentAddress}</p>
