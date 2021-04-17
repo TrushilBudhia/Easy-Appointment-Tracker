@@ -2,16 +2,16 @@
 var body = document.querySelector("body");
 var headerSection = document.querySelector("header");
 var mainSection = document.querySelector("main");
-var appointmentEntrySection = document.querySelector(
-  ".create-appointment-entry"
-);
-var appointmentEntryButton = document.querySelector(
-  ".create-appointment-entry-button"
-);
+var appointmentEntrySection = document.querySelector(".create-appointment-entry");
+var appointmentEntryButton = document.querySelector(".create-appointment-entry-button");
 var appointmentDateSection = document.querySelector(".appointment-date");
 var monthArticle = document.querySelector(".months");
 var dayArticle = document.querySelector(".days");
-var timeArticle = document.querySelector(".appointment-time");
+
+var hourArticle = document.querySelector('.appointment-hour');
+var minuteArticle = document.querySelector('.appointment-minute');
+
+//var timeArticle = document.querySelector(".appointment-time");
 var appointmentDetailsSection = document.querySelector(".appointment-details");
 var dateParagraphContainer = document.querySelector(".date-description");
 var appointmentCardSection = document.querySelector(".appointment-cards");
@@ -166,55 +166,115 @@ function monthSelected() {
 
 // Once the day is selected, an option to add the time will be displayed
 function dateSelected() {
-  dateChosen = this.getAttribute("data-day");
+  dateChosen = this.getAttribute('data-day');
   console.log("date chosen is " + dateChosen);
-  // Creating the time container with the input field and adding it to the time article HTML
-  var timeContainer = `
-        <div class='time-container'>
-            <label class='mr-2'>Enter time: </label>
-            <input class='time-input' placeholder='Enter Appointment Time'>
-        </div>
-    `;
-  timeArticle.innerHTML = timeContainer;
 
-  // When the user selects a date, only the latest time article will be shown - the previous one will be removed
-  var appointmentTimeContainerSelect = document.querySelectorAll(
-    ".time-container"
-  );
-  numberOfElementsShown(appointmentTimeContainerSelect, 1);
+  var hoursArray = ["08", "09", "10", "11", "12", "13", "14","15", "16", "17", "18", "19", "20", "21", "22", "23"];
+  var hourButton, pItem;
 
-  var dateParagraph = document.createElement("p");
-  dateParagraph.setAttribute("class", "chosen-appointment-date");
+  minuteArticle.setAttribute('class', 'is-hidden'); 
+  hourArticle.setAttribute('class', 'is-block box');
+  hourArticle.setAttribute('class', 'appointment-hour');
+
+  pItem = document.createElement('p');
+  pItem.textContent ="Hour";
+  hourArticle.append(pItem);
+
+  for(i = 0; i < hoursArray.length; i++) {
+      hourButton = document.createElement('button');
+      hourButton.setAttribute('class', 'hour button is-link mx-1 mt-3');
+      hourButton.setAttribute('data-hour', hoursArray[i]);
+      hourButton.setAttribute('id', hoursArray[i]);
+      hourButton.textContent =  hoursArray[i];
+      hourButton.addEventListener('click', hourSelected);
+      hourArticle.append(hourButton);
+  }
+}
+function minuteSelected() {
+  var minutesArray = ["00","05", "10", "15", "20", "25", "35", "40", "45", "50"];
+  var minuteButtonSelect;
+  console.log('inside minuteSelected');
+  hourChosen = document.querySelector('.hourSelected').getAttribute('data-hour');
+
+  minuteChosen = this.getAttribute('data-minute'); 
+  console.log('minute chosen', minuteChosen);
+  // Need to reset the minute selected in case user changes seletected minutes
+  minuteButtonSelect = minuteArticle.querySelectorAll('button');
+
+  for (i=0; i< minutesArray.length; i++){
+      minuteButtonSelect[i].setAttribute('class', 'minute button is-link mx-1 mt-3');
+  }
+
+  this.setAttribute('class', 'minute minuteSelected is-8 button is-warning mx-1 mt-3'); 
+
+  var dateParagraph = document.createElement('p');
+  dateParagraph.setAttribute('class', 'chosen-appointment-date');
+
+  appointmentStartTime = hourChosen + ':' + minuteChosen;
+  appointmentDate = dateChosen + ' ' + monthChosen + ' ' + currentYear;
+
   // When the user selects a date, only the latest date paragraph will be shown - the previous one will be removed
-  var dateParagraphClassSelect = document.querySelectorAll(
-    ".chosen-appointment-date"
-  );
+
+  var dateParagraphClassSelect = document.querySelectorAll('.chosen-appointment-date');
   numberOfElementsShown(dateParagraphClassSelect, 0);
 
   var monthChosenIndex = monthsArray.indexOf(monthChosen);
   monthChosenNumber = monthChosenIndex + 1;
-  formattedDate = currentYear + formattedMonth + dateChosen;
-  dayOfWeek = moment(
-    currentYear + "-" + monthChosenNumber + "-" + dateChosen,
-    "YYYY-MM-DD"
-  ).format("dddd");
-  dateParagraph.textContent =
-    "Appointment Date: " +
-    dayOfWeek +
-    ", " +
-    dateChosen +
-    " " +
-    monthChosen +
-    " " +
-    currentYear;
+  formattedDate = currentYear + formattedMonth + dateChosen; 
+  dayOfWeek = moment(currentYear + '-' + monthChosenNumber + '-' + dateChosen, 'YYYY-MM-DD').format('dddd');
+  dateParagraph.textContent = 'Appointment Date: ' + dayOfWeek + ', ' + dateChosen + ' ' + monthChosen + ' ' + currentYear + ' at ' + appointmentStartTime;
   dateParagraphContainer.append(dateParagraph);
-  appointmentDate = dateChosen + " " + monthChosen + " " + currentYear;
-
+  
   nextButtonCreate();
-  console.log("Next button displayed");
-  var nextButtonSelect = document.querySelector(".next");
-  nextButtonSelect.addEventListener("click", secondStepAppointmentDetails);
+  console.log('Next button displayed');
+  var nextButtonSelect = document.querySelector('.next');
+  nextButtonSelect.addEventListener('click', secondStepAppointmentDetails);
 }
+
+function hourSelected() {
+  var minutesArray = ["00","05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"];
+  var hoursArray = ["08", "09", "10", "11", "12", "13", "14","15", "16", "17", "18", "19", "20", "21", "22", "23"];
+  var  hourButtonSelect, minutesSection, minutesSectionExists, pItem
+
+  hourChosen = this.getAttribute('data-hour'); 
+  
+  minutesSection = document.querySelector('.appointment-minute');
+  // need to empty minute data
+  if (minutesSection != null ){
+      minutesSectionExists = minutesSection.querySelectorAll('.minute');
+      numberOfElementsShown(minutesSectionExists, 0);
+
+      minutesSectionExists = minutesSection.querySelectorAll('p');
+      numberOfElementsShown(minutesSectionExists, 0);
+  }
+
+  hourButtonSelect = hourArticle.querySelectorAll('button');
+  // reset hour arrays just in case the selected hour has changed
+  for (i=0; i< hoursArray.length; i++){
+      hourButtonSelect[i].setAttribute('class', 'hour button is-link mx-1 mt-3');
+  }
+  
+  this.setAttribute('class', 'hourSelected is-8 button is-warning mx-1 mt-3'); 
+
+  minuteArticle.setAttribute('class', 'is-block box');
+  minuteArticle.setAttribute('class', 'is-active');
+  minuteArticle.setAttribute('class', 'appointment-minute');
+
+  pItem = document.createElement('p');
+  pItem.textContent ="Minutes";
+  minuteArticle.append(pItem);
+
+  for (i=0; i <minutesArray.length; i++) {
+      minuteButton = document.createElement('button');
+      minuteButton.setAttribute('class', 'minute button is-link mx-1 mt-3');
+      minuteButton.setAttribute('data-minute', minutesArray[i]);
+      minuteButton.setAttribute('id', minutesArray[i]);
+      minuteButton.textContent = minutesArray[i];
+      minuteButton.addEventListener('click', minuteSelected);
+      minuteArticle.append(minuteButton);
+  }
+}
+
 
 // The next button will appear when the user has selected a date for their appointment entry
 function nextButtonCreate() {
@@ -230,20 +290,12 @@ function nextButtonCreate() {
 
 /* FUNCTION FOR THE SECOND STEP IN THE CREATE APPOINTMENT PROCESS */
 function secondStepAppointmentDetails() {
-  var timeInputSelect = document.querySelector(".time-input");
-  appointmentStartTime = timeInputSelect.value;
-  if (timeInputSelect && timeInputSelect.value) {
-    appointmentDateSection.setAttribute("class", "is-hidden");
-    appointmentDetailsSection.setAttribute("class", "is-block box");
+  appointmentDateSection.setAttribute("class", "is-hidden");
+  appointmentDetailsSection.setAttribute("class", "is-block box");
 
-    var submitAppointmentEntryButton = document.querySelector(
-      ".submit-appointment"
-    );
-    submitAppointmentEntryButton.addEventListener(
-      "click",
-      createAppointmentEntry
-    );
-  }
+  var submitAppointmentEntryButton = document.querySelector(".submit-appointment");
+  submitAppointmentEntryButton.addEventListener("click",createAppointmentEntry);
+  
 }
 
 function createAppointmentEntry(event) {
