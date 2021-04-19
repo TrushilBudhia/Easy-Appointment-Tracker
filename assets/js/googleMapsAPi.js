@@ -6,7 +6,6 @@ function loadMap(latValue, lngValue, zoomNumber) {
         latValue = -31.9523123;
         lngValue = 115.861309;
     }
-    console.log("Latitude: " + latValue + ", Longitude: " + lngValue);
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: latValue, lng: lngValue },
         zoom: zoomNumber,
