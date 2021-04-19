@@ -90,9 +90,7 @@ function saveAppointmentDetails() {
 }
 
 function loadAppointmentDetails() {
-  var storedAppointmentDetails = JSON.parse(
-    localStorage.getItem("myAppointmentDetails")
-  );
+  var storedAppointmentDetails = JSON.parse(localStorage.getItem("myAppointmentDetails"));
   if (storedAppointmentDetails !== null) {
     appointmentDetails = storedAppointmentDetails;
   }
@@ -414,16 +412,7 @@ function createAppointmentEntry(event) {
   appointmentWith = appointmentWithInput.value;
   appointmentAddress = addressInput.value;
 
-  if (
-    userNameInput &&
-    userName &&
-    appointmentForInput &&
-    appointmentWhom &&
-    appointmentWithInput &&
-    appointmentWith &&
-    addressInput &&
-    appointmentAddress
-  ) {
+  if (userNameInput && userName && appointmentForInput && appointmentWhom && appointmentWithInput && appointmentWith && addressInput && appointmentAddress) {
     var newAppointmentDetails = {
       name: userName,
       appointmentDate: appointmentDate,
@@ -435,15 +424,8 @@ function createAppointmentEntry(event) {
     appointmentDetails.push(newAppointmentDetails);
     saveAppointmentDetails();
     onLoad();
-    if (
-      userName &&
-      appointmentDate &&
-      appointmentStartTime &&
-      appointmentWhom &&
-      appointmentWith &&
-      appointmentAddress
-    ) {
-      addNewAppointment();
+    if (userName && appointmentDate && appointmentStartTime && appointmentWhom && appointmentWith && appointmentAddress) {
+      renderAppointments();
       var ifNoAppointments = document.getElementById("no-appointments");
       if (ifNoAppointments) {
         ifNoAppointments.parentNode.remove();
@@ -475,46 +457,33 @@ function createAppointmentEntry(event) {
   }
 }
 
-function addNewAppointment() {
-
-
-
-   //Create a column for each card
+function addAppointment(appointmentDate, appointmentStartTime, appointmentWith, appointmentWhom, appointmentAddress) {
+  //Create a column for each card
   var appointmentColumn = document.createElement("div");
-  appointmentColumn.setAttribute(
-    "class",
-    "column is-one-fifth card-columns-nested"
-  );
+  appointmentColumn.setAttribute("class", "column is-one-fifth card-columns-nested");
   
   //Create Card
   var appointmentCard = document.createElement("div");
   appointmentCard.setAttribute("class", "card");
   
-
   //Card Header and content
   var appointmentCardHeader = document.createElement("div");
   appointmentCardHeader.setAttribute("class", "card-header");
-
   var appointmentCardHeaderContent = document.createElement("div");
   appointmentCardHeaderContent.setAttribute("class", "card-header-title");
-
   var appointmentCardContent = document.createElement("div");
-  appointmentCardContent.setAttribute("class", "card-content");
-  
+  appointmentCardContent.setAttribute("class", "card-content");  
   // Access Appointment Date and Start time for Header Content
   var appointmentHeaderData = `
-  <p class="my-3"><span class="has-text-weight-semibold">${appointmentDate}</span></p>
-  <p class="my-3"><span class="has-text-weight-semibold">At : </span>${appointmentStartTime}</p>
- `;
-
+    <p class="my-3"><span class="has-text-weight-semibold">${appointmentDate}</span></p>
+    <p class="my-3"><span class="has-text-weight-semibold">At : </span>${appointmentStartTime}</p>
+  `;
   //Pull from arrays for Card Content
   var appointmentCardData = `
-  <p class="my-3"><span class="has-text-weight-semibold">With:</span> ${appointmentWith}</p>
-  <p class="my-3"><span class="has-text-weight-semibold">For Whom:</span> ${appointmentWhom}</p>
-  <p class="my-3"><span class="has-text-weight-semibold">Address:</span> ${appointmentAddress}</p>
+    <p class="my-3"><span class="has-text-weight-semibold">With:</span> ${appointmentWith}</p>
+    <p class="my-3"><span class="has-text-weight-semibold">For Whom:</span> ${appointmentWhom}</p>
+    <p class="my-3"><span class="has-text-weight-semibold">Address:</span> ${appointmentAddress}</p>
   `;
-  
-
   //Create a card footer with edit and delete buttons
   var cardFooter = document.createElement("footer");
   cardFooter.setAttribute("class", "card-footer");
@@ -540,72 +509,14 @@ function addNewAppointment() {
 }
 
 function renderAppointments() {
-  appointmentCardSection.setAttribute(
-    "class",
-    "appointment-cards is-block mx-3"
-  );
-
-  var oldAppoinmentDetails = JSON.parse(
-    localStorage.getItem("myAppointmentDetails")
-  );
-
-  if (oldAppoinmentDetails !== null) {
-    var appointmentDetails = Object.values(oldAppoinmentDetails);
-
-    for (let i = 0; i < appointmentDetails.length; i++) {
-      var appointmentColumn = document.createElement("div");
-      appointmentColumn.setAttribute(
-        "class",
-        "column is-one-fifth card-columns-nested"
-      );
-
-      var appointmentCard = document.createElement("div");
-      appointmentCard.setAttribute("class", "card");
-
-      var appointmentCardHeader = document.createElement("div");
-      appointmentCardHeader.setAttribute("class", "card-header");
-
-      var appointmentCardHeaderContent = document.createElement("div");
-      appointmentCardHeaderContent.setAttribute("class", "card-header-title");
-
-      var appointmentCardContent = document.createElement("div");
-      appointmentCardContent.setAttribute("class", "card-content");
-
-      var appointmentHeaderData = `
-    <p class="my-3"><span class="has-text-weight-semibold">${appointmentDetails[i].appointmentDate}</span></p>
-    <p class="my-3"><span class="has-text-weight-semibold">At:</span>${appointmentDetails[i].appointmentStartTime}</p>
-    `;
-
-      var appointmentCardData = `
-    <p class="my-3"><span class="has-text-weight-semibold">With:</span> ${appointmentDetails[i].appointmentWith}</p>
-    
-    <p class="my-3"><span class="has-text-weight-semibold">For Whom:</span> ${appointmentDetails[i].appointmentWhom}</p>
-   
-    <p class="my-3"><span class="has-text-weight-semibold">Address:</span> ${appointmentDetails[i].appointmentAddress}</p>
-    `;
-
-      var cardFooter = document.createElement("footer");
-      cardFooter.setAttribute("class", "card-footer");
-      editButton = document.createElement("button");
-      editButton.setAttribute("class", "card-footer-item edit-btn");
-      editButton.textContent = "Edit";
-      deleteButton = document.createElement("button");
-      deleteButton.setAttribute("class", "card-footer-item delete-btn");
-      deleteButton.textContent = "Delete";
-
-      appointmentCardHeaderContent.innerHTML = appointmentHeaderData;
-      appointmentCardContent.innerHTML = appointmentCardData;
-      appointmentColumns.append(appointmentColumn);
-      appointmentCard.append(
-        appointmentCardHeader,
-        appointmentCardContent,
-        cardFooter
-      );
-      appointmentCardHeader.append(appointmentCardHeaderContent);
-      appointmentColumn.append(appointmentCard);
-      cardFooter.append(editButton, deleteButton);
-    }
-  } else {
+  appointmentCardSection.setAttribute("class", "appointment-cards is-block mx-3");
+  appointmentDetailsSort = appointmentDetails.sort((a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate));
+  appointmentColumns.innerHTML = "";
+  for (let i = 0; i < appointmentDetails.length; i++) {
+    addAppointment(appointmentDetails[i].appointmentDate, appointmentDetails[i].appointmentStartTime, appointmentDetails[i].appointmentWith, appointmentDetails[i].appointmentWhom, appointmentDetails[i].appointmentAddress);
+    deleteButton.setAttribute("data-appointment-index", i);
+  }
+  if (appointmentDetails.length < 1) {
     var appointmentCardData = `
        <h4 id="no-appointments">No appointments have been currently saved.</h4>
     `;
@@ -641,10 +552,26 @@ function numberOfElementsShown(elementSelect, numberOfElements) {
 
 // Function to highlight the button of the current month
 function monthButtonHighlight(monthButtonSelect, monthIndex) {
-  monthButtonSelect[monthIndex].setAttribute(
-    "class",
-    "month is-8 button is-warning mx-1 mt-3"
-  );
+  monthButtonSelect[monthIndex].setAttribute("class", "month is-8 button is-warning mx-1 mt-3");
+}
+
+// Function to delete the appointment when the delete button is clicked
+function deleteAppointment(event) {
+  var element = event.target;
+  console.log(element);
+  if (element.matches(".delete-btn") === true) {
+    console.log("delete button clicked");
+    var index = element.getAttribute("data-appointment-index");
+    appointmentDetails.splice(index, 1);
+    saveAppointmentDetails();
+    renderAppointments();
+  } 
+}
+
+function deleteClickEvent() {
+  deleteButton = document.querySelectorAll(".delete-btn");
+  cardContainer = document.querySelector(".card-columns");
+  cardContainer.addEventListener("click", deleteAppointment);
 }
 
 // Click event attached to the Create Appointment Entry button
@@ -652,27 +579,20 @@ appointmentEntryButton.addEventListener("click", startEntry);
 
 // Function to run when the webpage loads - user will see the Create Appointment Entry button on the top of the page below the header
 function onLoad() {
-  appointmentEntrySection.setAttribute(
-    "class",
-    "create-appointment-entry has-text-centered mb-5 p-4"
-  );
-  appointmentEntryButton.setAttribute(
-    "class",
-    "create-appointment-entry-button button is-link is-size-4 my-5 p-5"
-  );
+  appointmentEntrySection.setAttribute("class", "create-appointment-entry has-text-centered mb-5 p-4");
+  appointmentEntryButton.setAttribute("class", "create-appointment-entry-button button is-link is-size-4 my-5 p-5");
   appointmentDateSection.setAttribute("class", "is-hidden");
   appointmentDetailsSection.setAttribute("class", "is-hidden");
-  mainSection.setAttribute(
-    "style",
-    "margin-top: 2rem; margin-bottom: 2rem; min-height: 87vh;"
-  );
-
+  mainSection.setAttribute("style", "margin-top: 2rem; margin-bottom: 2rem; min-height: 87vh;");
+  deleteClickEvent()
   // On page load, user view is scrolled to the top of the web page
   setTimeout(function () {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   }, 400);
 }
-
 loadAppointmentDetails();
 onLoad();
+
+
+
