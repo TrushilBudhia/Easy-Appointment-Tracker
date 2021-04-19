@@ -503,9 +503,7 @@ function monthButtonHighlight(monthButtonSelect, monthIndex) {
 // Function to delete the appointment when the delete button is clicked
 function deleteAppointment(event) {
   var element = event.target;
-  console.log(element);
   if (element.matches(".delete-btn") === true) {
-    console.log("delete button clicked");
     var index = element.getAttribute("data-appointment-index");
     appointmentDetails.splice(index, 1);
     saveAppointmentDetails();
