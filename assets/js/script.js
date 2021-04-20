@@ -30,38 +30,8 @@ var currentYear = m.format("YYYY");
 
 var monthsArray = moment.months();
 var daysArray = [];
-var hoursArray = [
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "21",
-  "22",
-  "23",
-];
-var minutesArray = [
-  "00",
-  "05",
-  "10",
-  "15",
-  "20",
-  "25",
-  "30",
-  "35",
-  "40",
-  "45",
-  "50",
-  "55",
-];
+var hoursArray = ["08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",];
+var minutesArray = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",];
 var appointmentDate,
   appointmentStartTime,
   appointmentWith,
@@ -73,6 +43,7 @@ var appointmentDate,
   formattedDate,
   formattedMonth,
   monthChosen,
+  monthChosenNumber,
   userName;
 
 currentMonthIndex = monthsArray.indexOf(currentMonth);
@@ -130,24 +101,8 @@ function startEntry() {
 function monthSelected() {
   monthChosen = this.getAttribute("data-month");
   // Need to check that if there are any hours or minutes that these are cleared if and when the user changes the month
-  var dayButtonSelect = appointmentDateSection.querySelectorAll(".day");
-  numberOfElementsShown(dayButtonSelect, 0);
-
-  var hourButtonSelect = appointmentDateSection.querySelectorAll(".hour");
-  numberOfElementsShown(hourButtonSelect, 0);
-
-  // var hourParagraphSelect = hourArticle.querySelectorAll("p");
-  // numberOfElementsShown(hourParagraphSelect, 0);
-
-  var minutesSectionExists = appointmentDateSection.querySelectorAll(".minute");
-  numberOfElementsShown(minutesSectionExists, 0);
-
-  var minutesSectionExists = appointmentDateSection.querySelectorAll("p");
-  numberOfElementsShown(minutesSectionExists, 0);
-
-  var buttonSelect = appointmentDateSection.querySelectorAll(".next");
-  numberOfElementsShown(buttonSelect, 0);
-
+  clearButtons();
+  
   // Changing the selected month button colour when clicked
   var monthChosenIndex = monthsArray.indexOf(monthChosen);
   var monthArticle = document.querySelector(".months");
@@ -195,7 +150,6 @@ function dateSelected() {
   // Ensure Minutes are cleared from any previous months
   var minutesSectionExists = appointmentDateSection.querySelectorAll(".minute");
   numberOfElementsShown(minutesSectionExists, 0);
-
   var minutesSectionExists = appointmentDateSection.querySelectorAll("p");
   numberOfElementsShown(minutesSectionExists, 0);
 
@@ -228,7 +182,6 @@ function dateSelected() {
   // Preventing the hour button and hour paragraph elements from being duplicated when the day is clicked on again by the user
   var hourButtonSelect = appointmentDateSection.querySelectorAll(".hour");
   numberOfElementsShown(hourButtonSelect, 16);
-
   var hourParagraphSelect = hourArticle.querySelectorAll("p");
   numberOfElementsShown(hourParagraphSelect, 1);
 
@@ -261,7 +214,6 @@ function hourSelected() {
   // need to empty minute data
   minutesSectionExists = minutesSection.querySelectorAll(".minute");
   numberOfElementsShown(minutesSectionExists, 0);
-
   minutesSectionExists = minutesSection.querySelectorAll("p");
   numberOfElementsShown(minutesSectionExists, 0);
 
@@ -302,9 +254,7 @@ function minuteSelected() {
   var minuteButtonSelect = minuteArticle.querySelectorAll("button");
   for (i = 0; i < minutesArray.length; i++) {
     minuteChosen = this.getAttribute("data-minute");
-
     minuteButtonSelect[i].setAttribute("class","minute button is-link mx-1 mt-3");
-
     this.setAttribute("class","minute minuteSelected is-8 button is-warning mx-1 mt-3");
   }
 
@@ -344,11 +294,10 @@ function nextButtonCreate() {
 
 /* FUNCTION FOR THE SECOND STEP IN THE CREATE APPOINTMENT PROCESS */
 function setupAppointmentEntry() {
-  userNameInput.value = '';
-  appointmentForInput.value = '';
-  appointmentWithInput.value = '';
-  addressInput.value = '';
-
+  userNameInput.value = "";
+  appointmentForInput.value = "";
+  appointmentWithInput.value = "";
+  addressInput.value = "";
   appointmentDateSection.setAttribute("class", "is-hidden");
   appointmentDetailsSection.setAttribute("class","appointment-details box is-block mx-3");
   var submitAppointmentEntryButton = document.querySelector(".submit-appointment");
@@ -357,7 +306,6 @@ function setupAppointmentEntry() {
 
 function createAppointmentEntry(event) {
   event.preventDefault();
-
   userName = userNameInput.value;
   appointmentWhom = appointmentForInput.value;
   appointmentWith = appointmentWithInput.value;
@@ -408,6 +356,7 @@ function createAppointmentEntry(event) {
   }
 }
 
+// Adding appointments to the appointment container
 function addAppointment(appointmentDate, appointmentStartTime, appointmentWith, appointmentWhom, appointmentAddress) {
   //Create a column for each card
   var appointmentColumn = document.createElement("div");
@@ -455,6 +404,7 @@ function addAppointment(appointmentDate, appointmentStartTime, appointmentWith, 
   cardFooter.append(editButton, deleteButton);
 }
 
+// Rendering the appointment cards
 function renderAppointments() {
   appointmentCardSection.setAttribute("class", "appointment-cards is-block mx-3");
   appointmentDetailsSort = appointmentDetails.sort((a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate));
@@ -472,6 +422,7 @@ function renderAppointments() {
   }
 }
 
+// Getting the number of days in the month selected
 function getDaysArrayByMonth(year, month) {
   formattedMonth = ("0" + month).slice(-2);
   var daysInMonth = moment(year + "-" + formattedMonth).daysInMonth();
@@ -499,6 +450,19 @@ function numberOfElementsShown(elementSelect, numberOfElements) {
 function monthButtonHighlight(monthButtonSelect, monthIndex) {
   monthButtonSelect[monthIndex].setAttribute("class", "month is-8 button is-warning mx-1 mt-3");
 }
+// Function to clear the date and time buttons
+function clearButtons() {
+  var dayButtonSelect = appointmentDateSection.querySelectorAll(".day");
+  numberOfElementsShown(dayButtonSelect, 0);
+  var hourButtonSelect = appointmentDateSection.querySelectorAll(".hour");
+  numberOfElementsShown(hourButtonSelect, 0);
+  var minutesSectionExists = appointmentDateSection.querySelectorAll(".minute");
+  numberOfElementsShown(minutesSectionExists, 0);
+  var minutesSectionExists = appointmentDateSection.querySelectorAll("p");
+  numberOfElementsShown(minutesSectionExists, 0);
+  var buttonSelect = appointmentDateSection.querySelectorAll(".next");
+  numberOfElementsShown(buttonSelect, 0);
+}
 
 // Function to delete the appointment when the delete button is clicked
 function deleteAppointment(event) {
@@ -510,7 +474,7 @@ function deleteAppointment(event) {
     renderAppointments();
   } 
 }
-
+// Click event for the delete button in the appointment card
 function deleteClickEvent() {
   deleteButton = document.querySelectorAll(".delete-btn");
   cardContainer = document.querySelector(".card-columns");
@@ -526,23 +490,8 @@ function onLoad() {
   appointmentEntryButton.setAttribute("class", "create-appointment-entry-button button is-link is-size-4 my-5 p-5");
   appointmentDateSection.setAttribute("class", "is-hidden");
   appointmentDetailsSection.setAttribute("class", "is-hidden");
-  mainSection.setAttribute("style", "margin-top: 2rem; margin-bottom: 2rem; min-height: 87vh;");
-
-  var dayButtonSelect = appointmentDateSection.querySelectorAll(".day");
-  numberOfElementsShown(dayButtonSelect, 0);
-
-  var hourButtonSelect = appointmentDateSection.querySelectorAll(".hour");
-  numberOfElementsShown(hourButtonSelect, 0);
-
-  var minutesSectionExists = appointmentDateSection.querySelectorAll(".minute");
-  numberOfElementsShown(minutesSectionExists, 0);
-
-  var minutesSectionExists = appointmentDateSection.querySelectorAll("p");
-  numberOfElementsShown(minutesSectionExists, 0);
-
-  var buttonSelect = appointmentDateSection.querySelectorAll(".next");
-  numberOfElementsShown(buttonSelect, 0);
-
+  mainSection.setAttribute("style", "margin-top: 2rem; margin-bottom: 2rem; min-height: 81vh;");
+  clearButtons();
   deleteClickEvent()
   // On page load, user view is scrolled to the top of the web page
   setTimeout(function () {

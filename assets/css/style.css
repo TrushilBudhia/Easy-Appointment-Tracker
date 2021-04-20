@@ -1,10 +1,18 @@
 /* Element Styling */
 html {
   background: #eef6fc;
+
+}
+
+/* Icon */
+.app-icon {
+  content: url(../images/app-icon.png);
+  height: 50px;
+  position: relative;
+  top: 7px;
 }
 
 /* Appointment card section styling */
-
 .columns {
   flex-wrap: wrap;
   justify-content: center;
