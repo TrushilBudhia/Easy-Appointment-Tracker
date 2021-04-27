@@ -35,6 +35,6 @@ Contributions, issues and feature requests are welcome.
 This project is [MIT](./LICENSE) licensed
 
 ## Collaborators
-- [Shaun Curtis](https://github.com/ShaneCurtis84)
+- [Shane Curtis](https://github.com/ShaneCurtis84)
 - [Susanne Bilney](https://github.com/Susanne85)
 - [Trushil Budhia](https://github.com/TrushilBudhia)
