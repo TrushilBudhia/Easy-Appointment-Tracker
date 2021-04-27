@@ -38,7 +38,7 @@ html {
 
 .card-content {
   text-align: center;
-  background-color: #bfbfbd;
+  background-color: #bdbebf;
   color: black;
   font-weight: bold;
   height: 100%;
@@ -47,8 +47,6 @@ html {
 .card-footer {
   background-color: #3273dc;
   margin-top: auto;
- 
-  
 }
 
 .card-footer-item {
@@ -56,18 +54,21 @@ html {
   color: #fff;
   margin-top: auto;
 }
+
 .edit-btn:hover {
   background-color: #ffdd57;
-  
+  color: #000;  
 }
+
 .delete-btn:hover {
-background-color: #ffdd57;
+  background-color: #ffdd57;
+  color: #000;
 }
 
 button {
   border-width: 0;
+  cursor: pointer;
 }
-
 
 /* Google Map */
 /* Always set the map height explicitly to define the size of the div element that contains the map. */
